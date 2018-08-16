@@ -1,0 +1,8 @@
+{
+  "id": 0,
+  "firstName": null,
+  "address": {
+    "street": null,
+    "city": null
+  }
+}
