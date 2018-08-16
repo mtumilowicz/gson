@@ -1,10 +1,9 @@
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.stream.JsonReader
+import groovy.json.JsonGenerator
 import groovy.json.JsonOutput
-import groovy.json.JsonSlurper
-import spock.lang.Specification
-
+import spock.lang.Specification 
 /**
  * Created by mtumilowicz on 2018-08-16.
  */
@@ -25,8 +24,6 @@ class GsonTest extends Specification {
                 .build()
 
         when:
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create()
-//        JsonOutput.prettyPrint(json)
         def customerJson = new Gson().toJson(customer)
 
         then:
@@ -68,7 +65,6 @@ class GsonTest extends Specification {
         when:
         Gson gson = new GsonBuilder().serializeNulls().create()
         def customerJson = gson.toJson(customer)
-        println customerJson
 
         then:
         customerJson == JsonOutput.unescaped(customerJson).toString()
@@ -108,10 +104,10 @@ class GsonTest extends Specification {
         
         and:
         Gson gson = new GsonBuilder().setPrettyPrinting().create()
-//        JsonOutput.prettyPrint(json)
-        
+        def jsonGenerator = new JsonGenerator.Options().build()
+
         expect:
         println gson.toJson(customer)
-        println new JsonSlurper().toJ
+        println JsonOutput.prettyPrint(jsonGenerator.toJson(customer))
     }
 }
