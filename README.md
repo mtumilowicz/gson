@@ -24,7 +24,7 @@ We serialize / deserialize objects from / to json using `GSON`.
         Gson gson = new GsonBuilder().serializeNulls().create()
         def customerJson = gson.toJson(customer)        
         ```
-    * pretty (well formated) json
+    * pretty (well formatted) json
         ```
         Gson gson = new GsonBuilder().setPrettyPrinting().create()
         println gson.toJson(customer)  
