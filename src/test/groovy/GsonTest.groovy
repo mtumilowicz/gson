@@ -1,8 +1,6 @@
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.stream.JsonReader
-import groovy.json.JsonGenerator
-import groovy.json.JsonOutput
 import spock.lang.Specification 
 /**
  * Created by mtumilowicz on 2018-08-16.
@@ -27,7 +25,7 @@ class GsonTest extends Specification {
         def customerJson = new Gson().toJson(customer)
 
         then:
-        customerJson == JsonOutput.unescaped(customerJson).toString()
+        customerJson == '{"id":1,"firstName":"firstName","address":{"street":"street","city":"city"}}'
     }
 
     def "full packed customer from json"() {
@@ -52,7 +50,7 @@ class GsonTest extends Specification {
         customer == expectedCustomer
     }
 
-    def "empty customer to json"() {
+    def "empty customer to json (with serializing nulls)"() {
         given:
         def address = Address.builder()
                 .build()
@@ -67,7 +65,24 @@ class GsonTest extends Specification {
         def customerJson = gson.toJson(customer)
 
         then:
-        customerJson == JsonOutput.unescaped(customerJson).toString()
+        customerJson == '{"id":0,"firstName":null,"address":{"street":null,"city":null}}'
+    }
+
+    def "empty customer to json (without serializing nulls)"() {
+        given:
+        def address = Address.builder()
+                .build()
+
+        and:
+        def customer = Customer.builder()
+                .address(address)
+                .build()
+
+        when:
+        def customerJson = new Gson().toJson(customer)
+
+        then:
+        customerJson == '{"id":0,"address":{}}'
     }
 
     def "empty customer from json"() {
@@ -104,10 +119,15 @@ class GsonTest extends Specification {
         
         and:
         Gson gson = new GsonBuilder().setPrettyPrinting().create()
-        def jsonGenerator = new JsonGenerator.Options().build()
-
+        
         expect:
-        println gson.toJson(customer)
-        println JsonOutput.prettyPrint(jsonGenerator.toJson(customer))
+        gson.toJson(customer) == '{\n' +
+                '  "id": 1,\n' +
+                '  "firstName": "firstName",\n' +
+                '  "address": {\n' +
+                '    "street": "street",\n' +
+                '    "city": "city"\n' +
+                '  }\n' +
+                '}'
     }
 }
